@@ -20,6 +20,23 @@ This library is _not_ intended to...
 - Perform full validation of a manifest. (This provides syntax
   validation only)
 
+## Usage
+
+```
+manifests, err := codec.YAML(myBytes).All()
+
+//...
+
+for _, manifest := range manifests {
+
+    // Find out what kind of object it is.
+    obj, _ := manifest.Ref()
+    println(obj.APIVersion)
+    println(obj.Kind)
+}
+
+```
+
 ## Generating This Package from Upstream
 
 Many parts of this package are generated computationally from the actual

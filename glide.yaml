@@ -1,3 +1,5 @@
 package: main
 import:
   - package: github.com/go-inf/inf
+  - package: github.com/ghodss/yaml
+  - package: gopkg.in/yaml.v2

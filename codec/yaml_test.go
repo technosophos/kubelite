@@ -8,7 +8,7 @@ import (
 
 const testdata = "../testdata"
 
-func TestYamlDecoder(t *testing.T) {
+func TestYamlDecoderOne(t *testing.T) {
 	d, err := ioutil.ReadFile(path.Join(testdata, "pod.yaml"))
 	if err != nil {
 		t.Error(err)
@@ -28,5 +28,30 @@ func TestYamlDecoder(t *testing.T) {
 	}
 	if ref.APIVersion != "v1" {
 		t.Errorf("Expected v1, got %s", ref.APIVersion)
+	}
+}
+
+func TestYamlDecoderAll(t *testing.T) {
+	d, err := ioutil.ReadFile(path.Join(testdata, "three-pods.yaml"))
+	if err != nil {
+		t.Error(err)
+	}
+
+	ms, err := YAML(d).All()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(ms) != 3 {
+		t.Errorf("Expected 3 pods, got %d", len(ms))
+	}
+
+	ref, err := ms[2].Ref()
+	if err != nil {
+		t.Errorf("Expected a reference for pod[2]: %s", err)
+	}
+
+	if ref.Kind != "Pod" {
+		t.Errorf("Expected Pod, got %s", ref.Kind)
 	}
 }

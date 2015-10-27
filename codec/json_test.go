@@ -1,6 +1,7 @@
 package codec
 
 import (
+	"bytes"
 	"io/ioutil"
 	"path"
 	"testing"
@@ -39,5 +40,21 @@ func TestJsonDecoderAll(t *testing.T) {
 	}
 	if len(ms) != 2 {
 		t.Errorf("Expected 2 JSON items, got %d", len(ms))
+	}
+}
+
+func TestJsonEncoderAll(t *testing.T) {
+	f1 := map[string]string{"one": "hello"}
+	f2 := map[string]string{"two": "world"}
+
+	var b bytes.Buffer
+	if err := JSON.Encode(&b).All(f1, f2); err != nil {
+		t.Errorf("Failed to encode: %s", err)
+	}
+
+	expect := "{\"one\":\"hello\"}\n{\"two\":\"world\"}\n"
+	actual := b.String()
+	if actual != expect {
+		t.Errorf("Expected [%s], got [%s]", expect, actual)
 	}
 }

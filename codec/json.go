@@ -42,6 +42,7 @@ func (e *jsonEncoder) All(vs ...interface{}) error {
 			return err
 		}
 		e.out.Write(data)
+		e.out.Write([]byte("\n"))
 	}
 	return nil
 }

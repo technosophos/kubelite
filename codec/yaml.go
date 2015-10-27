@@ -4,20 +4,50 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
+	"io"
 
 	"github.com/ghodss/yaml"
 )
 
-func YAML(b []byte) *yamlDecoder {
+type yamlCodec struct{}
+
+func (c yamlCodec) Decode(b []byte) Decoder {
 	return &yamlDecoder{data: b}
+}
+
+func (c yamlCodec) Encode(out io.Writer) Encoder {
+	return &yamlEncoder{out: out}
+}
+
+type yamlEncoder struct {
+	out io.Writer
+}
+
+func (e *yamlEncoder) One(v interface{}) error {
+	buf, err := yaml.Marshal(v)
+	if err != nil {
+		return err
+	}
+	e.out.Write(buf)
+	return nil
+}
+
+func (e *yamlEncoder) All(vs ...interface{}) error {
+	c := len(vs) - 1
+	for i, v := range vs {
+		if err := e.One(v); err != nil {
+			return err
+		}
+		if i < c {
+			e.out.Write([]byte(yamlSeparator))
+			e.out.Write([]byte("\n"))
+		}
+	}
+	return nil
 }
 
 type yamlDecoder struct {
 	data []byte
-}
-
-func (d *yamlDecoder) For() string {
-	return "yaml"
 }
 
 // All returns all documents in a single YAML file.

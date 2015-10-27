@@ -1,6 +1,7 @@
 package codec
 
 import (
+	"bytes"
 	"io/ioutil"
 	"path"
 	"testing"
@@ -14,7 +15,7 @@ func TestYamlDecoderOne(t *testing.T) {
 		t.Error(err)
 	}
 
-	m, err := YAML(d).One()
+	m, err := YAML.Decode(d).One()
 	if err != nil {
 		t.Error(err)
 	}
@@ -37,7 +38,7 @@ func TestYamlDecoderAll(t *testing.T) {
 		t.Error(err)
 	}
 
-	ms, err := YAML(d).All()
+	ms, err := YAML.Decode(d).All()
 	if err != nil {
 		t.Error(err)
 	}
@@ -53,5 +54,22 @@ func TestYamlDecoderAll(t *testing.T) {
 
 	if ref.Kind != "Pod" {
 		t.Errorf("Expected Pod, got %s", ref.Kind)
+	}
+}
+
+func TestYamlEncoderAll(t *testing.T) {
+	f1 := map[string]string{"one": "hello"}
+	f2 := map[string]string{"two": "world"}
+
+	var b bytes.Buffer
+	if err := YAML.Encode(&b).All(f1, f2); err != nil {
+		t.Errorf("Failed to encode: %s", err)
+	}
+
+	// This is a little fragile, since whitespace in YAML is not defined.
+	expect := "one: hello\n\n---\ntwo: world\n"
+	actual := b.String()
+	if actual != expect {
+		t.Errorf("Expected [%s]\nGot [%s]", expect, actual)
 	}
 }

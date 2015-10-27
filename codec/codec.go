@@ -1,25 +1,36 @@
+// Package codec provides a JSON/YAML codec for Manifests.
+//
+// Usage:
+//
+// 	// Decode one manifest from a JSON file.
+// 	man, err := JSON.Decode(b).One()
+// 	// Decode all of the manifests out of this file.
+// 	manifests, err := YAML.Decode(b).All()
+// 	err := YAML.Encode(filename).One("hello")
+//	// Encode multiple objects to one file (as separate docs).
+// 	err := YAML.Encode(filename).All("one", "two", "three")
 package codec
 
-type Oner interface {
-	One() *Manifest
-}
+import (
+	"io"
+)
 
-type Aller interface {
-	All() []*Manifest
-}
+var JSON jsonCodec
+var YAML yamlCodec
 
-type Forer interface {
-	For() string
-}
-
-type Musketeer interface {
-	Oner
-	Forer
-	Aller
-	// And aller forer oner
+type Encoder interface {
+	// Write one manifest to one file
+	One(interface{}) error
+	// Write all objects to one file
+	All(...interface{}) error
 }
 
 type Decoder interface {
-	Encode() Musketeer
-	Decode() Musketeer
+	One() (*Manifest, error)
+	All() ([]*Manifest, error)
+}
+
+type Codec interface {
+	Encode(io.Writer) Encoder
+	Decode([]byte) Decoder
 }

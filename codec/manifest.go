@@ -61,3 +61,9 @@ func (m *Manifest) Secret() (*v1.Secret, error) {
 	o := new(v1.Secret)
 	return o, m.Object(o)
 }
+
+// Namespace decodes a manifest into a Namespace
+func (m *Manifest) Namespace() (*v1.Namespace, error) {
+	o := new(v1.Namespace)
+	return o, m.Object(o)
+}

@@ -20,3 +20,44 @@ func (m *Manifest) Ref() (*v1.ObjectReference, error) {
 	or := &v1.ObjectReference{}
 	return or, m.dec(m.data, or)
 }
+
+// Object decodes the manifest into the given object.
+//
+// You can use ObjectReference.Kind to figure out what kind of object to
+// decode into.
+//
+// There are several shortcut methods that will allow you to decode directly
+// to one of the common types, like Pod(), RC(), and Service().
+func (m *Manifest) Object(v interface{}) error {
+	return m.dec(m.data, v)
+}
+
+// Pod decodes a manifest into a Pod.
+func (m *Manifest) Pod() (*v1.Pod, error) {
+	o := new(v1.Pod)
+	return o, m.Object(o)
+}
+
+// RC decodes a manifest into a ReplicationController.
+func (m *Manifest) RC() (*v1.ReplicationController, error) {
+	o := new(v1.ReplicationController)
+	return o, m.Object(o)
+}
+
+// Service decodes a manifest into a Service
+func (m *Manifest) Service() (*v1.Service, error) {
+	o := new(v1.Service)
+	return o, m.Object(o)
+}
+
+// PersistentVolume decodes a manifest into a PersistentVolume
+func (m *Manifest) PersistentVolume() (*v1.PersistentVolume, error) {
+	o := new(v1.PersistentVolume)
+	return o, m.Object(o)
+}
+
+// Secret decodes a manifest into a Secret
+func (m *Manifest) Secret() (*v1.Secret, error) {
+	o := new(v1.Secret)
+	return o, m.Object(o)
+}

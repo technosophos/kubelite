@@ -1,5 +1,7 @@
 # KubeLite: Minimal Kubernetes API
 
+[![Stability: Unsupported](https://masterminds.github.io/stability/unsupported.svg)](https://masterminds.github.io/stability/unsupported.html)
+
 Perfect for when you need the Kubernetes APIs, but not the rest of Kubernetes.
 
 This package provides the following:
